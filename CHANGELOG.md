@@ -9,6 +9,8 @@ Initial release of adamrtalbot/containerregistry, created with the [nf-core](htt
 
 ### `Added`
 
+- `params.registry` which provides the default container registry
+
 ### `Fixed`
 
 ### `Dependencies`
