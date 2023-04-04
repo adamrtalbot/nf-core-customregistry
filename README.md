@@ -10,7 +10,26 @@
 
 <!-- TODO nf-core: Write a 1-2 sentence summary of what data the pipeline is for and what it does -->
 
-**adamrtalbot/containerregistry** is a bioinformatics best-practice analysis pipeline for Demo pipeline for switching container registries.
+**adamrtalbot/containerregistry** is an example NF-Core pipeline including configuration switching the default container registry.
+
+By default, it will use Docker containers stored on quay.io/biocontainers/ which are the default NF-Core containers. You can specify these using the docker container name, e.g. `multiqc:1.13--pyhdfd78af_0` which will resolve to `quay.io/biocontainers/multiqc:1.13--pyhdfd78af_0`. If you specify an alternative container registry such as `public.ecr.aws/biocontainers/` this will pull from an alternative registry, e.g. the previous example will resolve to `public.ecr.aws/biocontainers/multiqc:1.13--pyhdfd78af_0`. If you wish to use a different registry for an image, specify the entire registry in the module definition, e.g. `quay.io/biocontainers/python:3.8.3` in [samplesheet_check.nf](modules/local/samplesheet_check.nf). Finally, if you wish to override the default pipeline container image in the config it can be changed using module configuration. Check the Dockerhub container image specified for MultiQC in [conf/multiqc.config](conf/multiqc.config).
+
+Important! The registry + image name should resolve. Biocontainers use a unique hash which may not match the existing container
+
+
+Option 1: Run with default parameters which will pull all containers from quay.io:
+`nextflow run main.nf -profile test,docker --outdir results`
+
+Option 2: Run with an alternative base registry:
+`nextflow run main.nf -profile test,docker --outdir results --registry 'public.ecr.aws/biocontainers/'`
+
+Option 3: Run with a custom container for MultiQC:
+`nextflow run main.nf -profile test,docker --outdir results -c conf/multiqc.config`
+
+Option 4: Combine multiple to run from 3 different registries:
+`nextflow run main.nf -profile test,docker --outdir results --registry 'public.ecr.aws/biocontainers/' -c conf/multiqc.config`
+
+The rest of this repo is the default NF-Core 2.7.2 template.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
