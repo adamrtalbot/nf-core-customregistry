@@ -50,6 +50,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 include { FASTQC                      } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                     } from '../modules/nf-core/multiqc/main'
+include { FQ_LINT                     } from '../modules/nf-core/fq/lint/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 /*
@@ -72,6 +73,14 @@ workflow CONTAINERREGISTRY {
         ch_input
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+
+    //
+    // MODULE: Lint FASTQ
+    //
+    FQ_LINT(
+        INPUT_CHECK.out.reads
+    )
+    ch_versions = ch_versions.mix(FQ_LINT.out.versions.first())
 
     //
     // MODULE: Run FastQC

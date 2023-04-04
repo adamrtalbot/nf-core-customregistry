@@ -26,6 +26,8 @@ process MULTIQC {
     def config = multiqc_config ? "--config $multiqc_config" : ''
     def extra_config = extra_multiqc_config ? "--config $extra_multiqc_config" : ''
     """
+    grep 'docker run' .command.run | tr ' ' '\\n' | grep ${task.container}
+
     multiqc \\
         --force \\
         $args \\

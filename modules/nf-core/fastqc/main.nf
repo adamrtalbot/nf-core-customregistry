@@ -5,7 +5,7 @@ process FASTQC {
     conda "bioconda::fastqc=0.11.9"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/fastqc:0.11.9--0' :
-        'quay.io/biocontainers/fastqc:0.11.9--0' }"
+        'fastqc:0.11.9--0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -26,6 +26,8 @@ process FASTQC {
     def rename_to = old_new_pairs*.join(' ').join(' ')
     def renamed_files = old_new_pairs.collect{ old_name, new_name -> new_name }.join(' ')
     """
+    grep 'docker run' .command.run | tr ' ' '\\n' | grep ${task.container}
+
     printf "%s %s\\n" $rename_to | while read old_name new_name; do
         [ -f "\${new_name}" ] || ln -s \$old_name \$new_name
     done
